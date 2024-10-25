@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Caching in Drupal</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
+		<link href="https://fonts.cdnfonts.com/css/liberation-sans" rel="stylesheet">
+		<link rel="stylesheet" href="./assets/css/custom2024.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+
+	<body>
+    <header>
+			<div class="logo">
+				<div class="cover-logo">
+					<a href="/">
+						<img
+							src="./assets/images/event-logo-transparent.png"
+							alt="Event logo"
+						>
+					</a>
+				</div>
+			</div>
+    </header>
+
+
+		<div class="reveal">
+			<div class="slides">
+
+        <!-- COVER -->
+        <section
+          data-state="cover"
+          data-background-image="./assets/images/decoration-right-beach-drop-transparent.png"
+					data-background-size="25%"
+					data-background-position="95% 50%"
+          style="text-align: left;"
+        >
+          <div class="content">
+
+            <div class="title">
+              <h1 class="xxlarge">Introduction to Caching in Drupal.</h1>
+              <h1 class="xxlarge">A global picture</h1>
+							<h2 class="xlarge">Luis Ruiz Peidró</h2>
+            </div>
+          </div>
+        </section>
+
+        <!-- AUTHORS -->
+        <section data-state="authors"
+          data-background-image="./assets/images/decoration-right-beach-drop-transparent.png"
+					data-background-size="25%"
+					data-background-position="95% 50%"
+        >
+          <div class="ice-breaking">
+            <article class="panel">
+              <img
+                src="./assets/images/lpeidro.jpg"
+                width="100px"
+                height="100px"
+                alt="Luis Ruiz Peidró"
+              >
+              <h2>Luis Ruiz Peidró</h2>
+              <h3>Drupal Backend Developer</h3>
+              <h4></h4>
+              <a
+                href="https://www.drupal.org/u/lpeidro"
+                target="_blank"
+              >
+                drupal.org/u/lpeidro
+              </a>
+            </article>
+          </div>
+          <br>
+          <a
+            href="https://metadrop.net"
+            target="_blank"
+          >
+            <img
+              src="./assets/images/metadrop-logo.svg"
+              width="350"
+            >
+          </a>
+        </section>
+
+        <!-- Target-->
+        <section
+          data-state="chapter"
+          data-auto-animate
+          data-background-color="#e8f7fc"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+        >
+          <h1>Targets</h1>
+        </section>
+
+        <section
+          data-state="content"
+          data-auto-animate
+        >
+          <h1>Targets</h1>
+          <p>To understand the importance of caching in Drupal.</p>
+          <p>To understand the basic processes and concepts.</p>
+          <p>To have a global overview of the possible cache layers that can be found in a Drupal project.</p>
+
+        </section>
+
+
+        <!-- INTRODUCCION -->
+        <section>
+          <!-- INTRODUCCION | cover-->
+          <section
+            data-state="chapter"
+            data-background-color="#e8f7fc"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="12%"
+            data-background-position="right bottom"
+          >
+            <h1>Introduction</h1>
+          </section>
+
+          <!-- INTRODUCCION | Definition-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Definition</h3>
+            <p>It is a data storage layer that stores the results of operations so that when they are required again, there is no need to redo them.</p>
+            <p>Why perform an operation more than once if the result is the same?.</p>
+            <img src="./assets/images/schemas/cache-definition.png" alt="Cache" style="width: 50%;">
+          </section>
+
+          <!-- INTRODUCCION | Benefits-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="18%"
+            data-background-position="right bottom"
+          >
+            <h3>Benefits</h3>
+            <div class="two-columns small">
+              <div class="column">
+                <ul>
+                  <li class="fragment fade-in"><b>Increase data availability</b> (reduce the page load time...).</li>
+                  <li class="fragment fade-in"><b>Resource savings</b> (it is not need to rebuild the page...).</li>
+                </ul>
+              </div>
+              <div class="column">
+                <ul>
+                  <li class="fragment fade-in"><b>Help to earn money</b> (improving user experience...).</li>
+                  <li class="fragment fade-in"><b>Help to save money</b>: (infrastructure costs can be reduced...).</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 45%; /* Each column will take about half the width */
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- INTRODUCCION | Request flow-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Why is so important in Drupal</h3>
+            <img class="fragment fade-in" src="./assets/images/schemas/request_flow.png" alt="Cache" style="width: 80%;">
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 55%; /* Each column will take about half the width */
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+        </section>
+
+        <!-- INTRODUCCION END -->
+
+        <!-- PHP AND DRUPAL -->
+        <section>
+          <!-- PHP AND DRUPAL | cover-->
+          <section
+            data-state="chapter"
+            data-background-color="#e8f7fc"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="12%"
+            data-background-position="right bottom"
+          >
+            <h1>PHP and Drupal</h1>
+          </section>
+
+          <!-- PHP AND DRUPAL | OPcache-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>PHP</h2>
+            <div class="two-columns small">
+              <div class="column">
+               <img class="fragment fade-in" src="./assets/images/schemas/op_code.png" alt="Op Cache" style="width: 75%;">
+                <ul>
+                  <li class="fragment fade-in"><b>OPcache extensions</b>.</li>
+                  <li class="fragment fade-in">Store <b>compiled PHP</b> script in shared memory.</li>
+                  <li class="fragment fade-in">It is <b>essential</b> for any Drupal site to improve performance.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <img class="fragment fade-in" src="./assets/images/schemas/apcu_cache.png" alt="Op Cache" style="width: 85%;">
+                <ul>
+                  <li class="fragment fade-in">It is used to cache <b>data in memory</b>.</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 40%; /* Each column will take about half the width */
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | Drupal Cache-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>Drupal Cache System</h2>
+            <img src="./assets/images/schemas/drupal_cache_system.png" alt="Op Cache" style="width: 75%;">
+            <div class="two-columns small">
+              <div class="column">
+                <ul>
+                  <li>Cache backend.</li>
+                  <li>Cache bin.</li>
+                  <li>Cached Object Dependencies.</li>
+                  <li>Cached Invalidation.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <ul>
+                  <li>Interaction with the Cache API.</li>
+                  <li>Cache Dependency Propagation.</li>
+                  <li>Response caching (Internal Page Cache, Dynamic Page Cache).</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 40%; /* Each column will take about half the width */
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache backend-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache backend</h3>
+            <div class="two-columns small">
+              <div class="column">
+                <p class="left color-primary">Definition</p>
+                <ul>
+                  <li><b>Manage cached data</b> (storing, retrieving, invalidating).</li>
+                  <li><b>Intermediary layer</b> between the data source and the one requesting the data.</li>
+                  <li>The <b>main feature</b>: how and where it stores the data (database, memory...).</li>
+                </ul>
+              </div>
+              <div class="column">
+                <p class="left color-primary">Types (examples)</p>
+                <ul>
+                  <li><b>Database Backend</b>: This is the default Cache Backend. It uses the Drupal database.</li>
+                  <li><b>Chained Fast Backend</b>: Two cache layers: in memory and in database.</li>
+                  <li><b>Memory Backend</b>: Stores cached data in memory using a PHP array (context unit tests).</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 40%; /* Each column will take about half the width */
+                margin-left: 2rem;
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache bin-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache bin</h3>
+            <div class="left">
+              <ul>
+                <li>Act like boxes in the Drupal cache system.</li>
+                <li>Instead of having all cached data in one place. For example in a database table, we can <b>store</b>
+                  them <b>in different compartments</b>.
+                </li>
+                <li>Cache Bins are defined by what type of data they store.</li>
+              </ul>
+              <p>Benefits</p>
+              <ul>
+                <li>Having things more organized.</li>
+                <li>If we need to empty the caches, we do not need to delete all cached objects.</li>
+                <li>Having the ability to use different backends for each need.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache bin examples 1-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+          <h3>Cache bin defined in core.services.yml</h3>
+<pre>
+  <code data-line-numbers="1,4,6">cache.config:
+  class: Drupal\Core\Cache\CacheBackendInterface
+  tags:
+    - { name: cache.bin, default_backend: cache.backend.chainedfast }
+  factory: ['@cache_factory', 'get']
+  arguments: [config]</code>
+</pre>
+<pre>
+  <code data-line-numbers="1,4,6">cache.entity:
+  class: Drupal\Core\Cache\CacheBackendInterface
+  tags:
+    - { name: cache.bin }
+  factory: ['@cache_factory', 'get']
+  arguments: [entity]</code>
+</pre>
+ </section>
+
+          <!-- PHP AND DRUPAL | Cache bin examples-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache bin examples</h3>
+            <div class="two-columns small">
+              <div class="column">
+                <ul>
+                  <li class="fragment fade-in"><b>cache.bootstrap</b>: stores necessary information for Drupal's execution that varies very little.</li>
+                  <li class="fragment fade-in"><b>cache.config</b>: configuration and configuration entities.</li>
+                  <li class="fragment fade-in"><b>cache.entity</b>: Stores the values of existing content entities in Drupal.</li>
+                  <li class="fragment fade-in"><b>cache.render</b>: contains cached HTML strings like cached blocks, which can grow to large sizes.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <img class="fragment fade-in" src="./assets/images/schemas/cache_table.png" alt="Op Cache" style="width: 75%;">
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 40%; /* Each column will take about half the width */
+                margin-left: 2rem;
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache object dependencies-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache objects dependencies</h3>
+            <div class="two-columns small">
+              <div class="column">
+                <p class="left color-primary fragment fade-in">Invalidation</p>
+                <ul>
+                  <li class="fragment fade-in"><b>Cache tags</b>:establishes a dependency on the sources.</li>
+                  <li class="fragment fade-in"><b>Max-Age</b>: establishes a temporary dependency, which is an expiration date for the cache object.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <p class="left color-primary fragment fade-in">Variations</p>
+                <ul>
+                  <li class="fragment fade-in"><b>Cache context</b>: establishes a dependency on the context, creating variations based on the context (role, url.query, language).</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+              .column {
+                width: 100%; /* Each column will take about half the width */
+                margin-left: 2rem;
+              }
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+
+          <!-- PHP AND DRUPAL | Cache metadata examples-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="18%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache metadata examples</h3>
+            <div class="two-columns fragment fade-in">
+              <div class="left column fragment fade-in">
+                <p class="color-primary">Cache tags</p>
+                <ul>
+                  <li>node:5</li>
+                  <li>user:3</li>
+                  <li>node_list</li>
+                  <li>node_list:article</li>
+                  <li>config:system.performance</li>
+                </ul>
+              </div>
+              <div class="left column fragment fade-in">
+                <p class="color-primary">Cache contexts</p>
+                <ul>
+                  <li>user.roles</li>
+                  <li>theme</li>
+                  <li>languages</li>
+                  <li>url</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .column {
+                width: 45%; /* Each column will take about half the width */
+              }
+
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache invalidation-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache invalidation</h3>
+            <div class="left">
+            <p><b>Flush caches</b>: remove cached objects directly, for example, using the command “drush cr”.</p>
+            <p><b>Cache invalidation</b>: the process where cached data is invalidated because it has become outdated, with the aim of regenerating it with updated data:
+            <ul>
+            <li><b>Cache Max Age</b>: sets an expiration date for the cached object. Once this date is passed, the system understands the object is obsolete.</li>
+            <li><b>Cache tags</b>: set tags to associate cached objects with the source. This way, when the source is modified, such as an article, it identifies which cached objects need to be invalidated.</li>
+            </ul>
+            </div>
+          </section>
+        <!-- PHP AND DRUPAL | Interaction with the Cache API -->
+        <section
+          data-state="content"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="18%"
+          data-background-position="right bottom"
+        >
+          <h3>Interaction with the Cache API</h3>
+          <h4>Directly</h4>
+          <p>Interacting directly with the Cache API of Drupal, taking care of caching objects, retrieval, and invalidation ourselves.</p>
+          <pre>
+  <code>
+   $cid = 'my_module_example:' . \Drupal::languageManager()
+    ->getCurrentLanguage()->getId();
+   $data = NULL;
+   if ($cache = \Drupal::cache()->get($cid)) {
+     $data = $cache->data;
+   }
+   else {
+     $data = my_module_complicated_calculation();
+     \Drupal::cache()->set($cid, $data);
+   }
+  </code>
+</pre>
+        </section>
+
+          <!-- PHP AND DRUPAL | Interaction with the Cache API )) -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="18%"
+            data-background-position="right bottom"
+          >
+            <h3>Interaction with the Cache API</h3>
+            <h4>Indirectly</h4>
+            <p>Indirectly through the Render API. This second system is the most common.</p>
+            <pre>
+  <code>
+  $renderer = \Drupal::service('renderer');
+  $config = \Drupal::config('system.site');
+  $current_user = \Drupal::currentUser();
+  $build = [
+    '#markup' => t('Hi, %name, welcome back to @site!', [
+      '%name' => $current_user->getUsername(),
+      '@site' => $config->get('name'),
+    ]),
+    '#cache' => [
+      'contexts' => [
+        'user',
+      ],
+    ],
+  ];
+
+  $renderer->addCacheableDependency($build, $config);
+  $user_entity = \Drupal\user\Entity\User::load($current_user->id());
+  $renderer->addCacheableDependency($build, $user_entity);
+  </code>
+</pre>
+          </section>
+
+          <!-- PHP AND DRUPAL | Cache Dependency Propagation-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Cache Dependency Propagation</h3>
+            <img  src="./assets/images/schemas/cache_propagation.png" alt="Op Cache" style="width: 60%;">
+            <p>The dependencies defined in the different components are propagated to their ancestors for the invalidation to be effective.</p>
+          </section>
+
+          <!-- PHP AND DRUPAL | Response caching-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>Response caching</h3>
+            <div class="two-columns">
+              <div class="fragment fade-in column">
+                <p class="left color-primary">Internal Page Cache</p>
+                <ul>
+                  <li>Anonymous user.</li>
+                  <li>Static pages.</li>
+                  <li>Cache context and max age does not work.</li>
+                  <li>Small and medium sites. </li>
+                </ul>
+              </div>
+              <div class="fragment fade-in column">
+                <p class="left color-primary">Dynamic Page Cache</p>
+                <ul>
+                  <li>Anonymous user and logged users.</li>
+                  <li>Enable in any case.</li>
+                  <li>Dynamic pages.</li>
+                </ul>
+              </div>
+            </div>
+            <style>
+              .two-columns {
+                display: flex;
+                justify-content: space-between;
+              }
+              .column {
+                width: 100%; /* Each column will take about half the width */
+                margin-left: 2rem;
+              }
+              .column ul {
+                list-style-type: disc; /* Ensures that each column's list has bullet points */
+              }
+            </style>
+          </section>
+
+          <!-- PHP AND DRUPAL | How does Dynamic page cache work? -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h3>How does Dynamic Page Cache work?</h3>
+            <img  src="./assets/images/schemas/place_holder.png" alt="Op Cache" style="width: 90%;">
+            <p>It caches response objects with dynamic components by replacing those components with placeholders.</p>
+            <p>It waits until the last moment to render those components and replace the placeholders.</p>
+          </section>
+        </section>
+        <!-- PHP AND DRUPAL END -->
+
+        <!-- EXTERNAL CACHING SYSTEM -->
+        <section>
+          <!-- EXTERNAL CACHING SYSTEM | cover-->
+          <section
+            data-state="chapter"
+            data-background-color="#e8f7fc"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="12%"
+            data-background-position="right bottom"
+          >
+            <h1>External Caching System</h1>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | In memory cache-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="small"
+          >
+            <h2>In memory cache</h2>
+            <div class="two-columns">
+              <div class="column">
+                <img src="./assets/images/schemas/in_memory_cache.png" alt="In memory cache" style="width: 100%;">
+              </div>
+              <div class="column left">
+              <p>Buy default, Drupal stores the cache in the database.</p>
+              <p>Memcached and Redis stores cache in server memory.</p>
+              </div>
+            </div>
+            <div class="fragment fade-in">
+              <ul>
+                <li>Faster cache retrieval.</li>
+                <li>Significantly reduced drupal database requests.</li>
+                <li>Memory management.</li>
+              </ul>
+            </div>
+           </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Reverse proxy-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="small"
+          >
+            <h2>Caching reverse proxy</h2>
+                <img src="./assets/images/schemas/caching_reverse_proxy.png" alt="Caching reverse proxy" style="width: 80%;">
+                <div class="fragment fade-in left">
+                  <ul>
+                    <li>Improved performance and speed.</li>
+                    <li>Efficient resource utilization: reduce the requests to the origin server.</li>
+                    <li>Improves website security.</li>
+                  </ul>
+                </div>
+
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | CDN (Content Delivery Network)-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="small"
+          >
+            <h2>CDN (Content Delivery Network)</h2>
+            <img src="./assets/images/schemas/CDN_cache.png" alt="CDN" style="width: 80%;">
+            <div class="fragment fade-in left">
+              <ul>
+                <li>Improving website load times.</li>
+                <li>Reducing bandwidth costs.</li>
+                <li>Increasing content availability and redundancy.</li>
+                <li>Improving website security.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Complex architecture-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="small"
+          >
+            <h2>Complex architecture</h2>
+            <img src="./assets/images/schemas/complex_architecture.png" alt="CDN" style="width: 80%;">
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Invalidation cache in complex architecture-->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="small"
+          >
+            <h2>Cache invalidation in complex architecture</h2>
+            <div class="left">
+            <p><b>Max Age (TTL)</b>. The easiest way:</p>
+            <ul>
+            <li>It can be Communicated to the different caches in the headers of the response.</li>
+            <li>The cache system recreate, or ask the source if it has to be recreated.</li>
+            <li>There are some delays between the update of the source, and the recreation of the cache.</li>
+            </ul>
+            <p><b>Cache tags</b>:</p>
+            <ul>
+            <li>Send the cache tags in the response headers.</li>
+            <li>Drupal has to inform about invalidations.</li>
+            </ul>
+            <p><b>URLs</b>:</p>
+            <ul>
+            <li>Drupal requests the cache to remove the cached objects with a specific URL.</li>
+            </ul>
+            </div>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Purge module -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>Module Purge</h2>
+            <img src="./assets/images/schemas/purge_cache.png" alt="In memory cache" style="width: 70%;">
+            <p class="left small">purge_purger_httptc, purge_queuer_url, acquia_purge, akamai, cloudflare, cloudfront_purger, fastlypurger, keycdn, varnish_purge, max_cdn_cache, Nginx_cache_clear, purge_file</p>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Response headers -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>Response headers</h2>
+            <div class="two-columns">
+              <div class="column left">
+                <p>Why are response headers useful:</p>
+                <ul>
+                  <li>To send configuration about caching to other systems, for example, Browser, CDN, etc. (Max Age, Cache tags).</li>
+                  <li>For us, to debug.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <img src="./assets/images/schemas/response_headers.png" alt="In memory cache" style="width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Type Response headers -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>Types of headers:</h2>
+            <div class="two-columns">
+              <div class="column left small">
+                <ul>
+                  <li><b>Standard</b> HTTP headers.</li>
+                  <li><b>Not standard</b> HTTP headers prefixed with “X-” or another prefix, like “cf-”, added by Drupal and other cache layers.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <img src="./assets/images/schemas/example_type_cache.png" alt="Headers" style="width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Drupal headers -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+            class="left"
+          >
+            <h2>Drupal headers</h2>
+            <p>Standar Drupal headers:</p>
+            <ul><li><b>X-Drupal-Dynamic-Cache</b>: Indicates if the response object is cached by the Internal Dynamic Page Cache.</li>
+            <li><b>X-Drupal-Cache</b>: This parameter only shows when the Internal Page Cache is active and for anonymous users.</li>
+            </ul>
+            <p>States:</p>
+            <ul>
+              <li>HIT</li>
+              <li>MISS</li>
+              <li>UNCACHEABLE</li>
+            </ul>
+          </section>
+
+          <!-- EXTERNAL CACHING SYSTEM | Debugging Drupal headers -->
+          <section
+            data-state="content"
+            data-background-image="./assets/images/deco-right-bottom.png"
+            data-background-size="20%"
+            data-background-position="right bottom"
+          >
+            <h2>Debugging Drupal headers</h2>
+            <div class="xsmall">services.yml => "http.response.debug_cacheability_headers" => TRUE </div>
+            <img src="./assets/images/schemas/example_cache_debug.png" alt="Headers" style="width: 70%;">
+          </section>
+
+        <!-- EXTERNAL CACHING SYSTEM | Debugging Cache metadata -->
+        <section
+          data-state="content"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="20%"
+          data-background-position="right bottom"
+        >
+          <h2>Cache Review</h2>
+          <img src="./assets/images/schemas/cache_review.png" alt="Headers" style="width: 70%;">
+        </section>
+        </section>
+
+
+        <section
+          data-state="chapter"
+          data-auto-animate
+					data-background-color="#e8f7fc"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+        >
+          <h1>Summary</h1>
+        </section>
+
+        <section
+          data-state="content"
+          data-auto-animate
+        >
+          <h1>Summary</h1>
+          <img src="./assets/images/schemas/summary.png" alt="Headers" style="width: 70%; border: none;">
+
+        </section>
+
+        <section
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+          data-background-color="#fff"
+        >
+          <h1 class="xxlarge" style="margin-bottom: 20%">Questions</h1>
+
+        </section>
+
+
+        <section
+          data-state="end"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+          data-background-color="#fff"
+        >
+					<h2>
+						Gracias a los sponsor <span class="hl">PLATINO</span>
+						<img src="./assets/images/platino.png"></img>
+					</h2>
+				</section>
+
+      	<section
+          data-state="end"
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+          data-background-color="#fff"
+        >
+				<h2>
+					Gracias a los sponsor <span class="hl">GOLD</span>, <span class="hl">SILVER</span> y <span class="hl">BRONZE</span>
+					<img src="./assets/images/gold-silver-bronze.png"></img>
+				</h2>
+			</section>
+
+
+        <section
+          data-background-image="./assets/images/deco-right-bottom.png"
+          data-background-size="12%"
+          data-background-position="right bottom"
+          data-background-color="#fff"
+        >
+          <h1 class="xxxlarge" style="margin-bottom: 20%">¡Gracias!</h1>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
